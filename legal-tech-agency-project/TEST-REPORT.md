@@ -39,7 +39,10 @@ Verified on 2026-10-07 after the SEO code was pushed and deployed:
 - Public robots.txt allows crawling and points to the production sitemap. The sitemap responds successfully and lists the six published content pages, with no admin or preview URLs.
 - The old /admin.html URL returns HTTP 404.
 - The deployed homepage was inspected in the browser; no horizontal overflow or application console warning/error was detected.
-- Google Search Console verification, sitemap submission, and Request Indexing are still pending the owner's Google property access and verification token.
+- The approved Google HTML verification tag is present on the production homepage. Search Console confirmed successful ownership verification for `legaltechagency@gmail.com`.
+- Search Console successfully processed `sitemap.xml` and reported 6 discovered pages (not a claim that all 6 are indexed).
+- Homepage URL Inspection reported "URL ada di Google", "Halaman diindeks", and HTTPS serving.
+- A fresh Request Indexing attempt was rejected with "Kuota Terlampaui" because the daily quota was exceeded. No new indexing request was accepted; the UI advised retrying tomorrow.
 
 ## Publication Boundaries
 
@@ -47,8 +50,8 @@ Verified on 2026-10-07 after the SEO code was pushed and deployed:
 - There is no admin dashboard, Insight section, backend API, database, Supabase connection, login, submission form, or browser data-storage workflow.
 - WhatsApp destinations and message text were validated; no message was sent and account ownership was not independently verified.
 - Google Maps and WhatsApp require an internet connection and remain third-party services.
-- Hosting deployment, domain availability/ownership, production HTTPS, and actual hosting response headers must be checked after publishing. Local results are not a claim that the website is already live.
+- The production checks above confirm the current live deployment. Future deployments still require production HTTP, HTTPS, and response-header checks; local tests alone do not prove a site is live.
 - The prior Netlify domain and hosting configuration are removed. The supplied Vercel domain is pinned as the production origin.
-- Search Console ownership verification and an indexing request require the user's Google property access and are not completed by the code tests.
+- Search Console ownership and indexing status were checked in the owner's account with explicit approval. Code tests alone cannot verify Google ownership, indexing status, or ranking.
 
 Deploy only the contents of `public`, or the deployment ZIP. Do not publish the previous demo backup or the entire source directory.

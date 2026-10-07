@@ -29,7 +29,7 @@ Build menentukan origin dari `SITE_URL`, kemudian `site.config.json`, kemudian `
 
 URL produksi telah ditetapkan ke `https://legaltechagency.vercel.app/`. Build lokal dan Vercel menghasilkan canonical URL, Open Graph, sitemap, dan robots.txt untuk domain ini. Data terstruktur bisnis menggunakan microdata sehingga tetap bekerja dengan Content Security Policy tanpa mengizinkan inline JavaScript.
 
-Langkah verifikasi Search Console, token HTML Google, dan pengiriman sitemap tersedia di `SEO-GUIDE.md`. Token bisa diisi melalui `googleSiteVerification` di konfigurasi atau `GOOGLE_SITE_VERIFICATION` di Vercel, kemudian deploy ulang. Tanpa token asli, verifikasi Google belum dilakukan.
+Search Console telah diverifikasi dengan HTML tag pada 2026-10-07. Google berhasil memproses sitemap (6 halaman ditemukan), dan homepage berstatus diindeks. Permintaan pengindeksan ulang terbaru ditolak karena kuota harian; detail hasil dan panduan pemeliharaan tersedia di `SEO-GUIDE.md`. Pertahankan token asli di `googleSiteVerification` atau `GOOGLE_SITE_VERIFICATION` di Vercel.
 
 ## Mengubah Konten
 

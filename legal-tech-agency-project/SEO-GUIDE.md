@@ -14,6 +14,16 @@ URL utama: https://legaltechagency.vercel.app/
 
 ## Verifikasi Search Console
 
+Status aktual pada 2026-10-07 untuk akun pemilik `legaltechagency@gmail.com`:
+
+- Kepemilikan URL Prefix `https://legaltechagency.vercel.app/` berhasil diverifikasi dengan HTML tag yang sudah terpasang di homepage produksi.
+- `sitemap.xml` berhasil dikirim dan diproses Google; 6 halaman ditemukan. Ini bukan berarti keenam halaman sudah diindeks.
+- URL Inspection homepage menampilkan "URL ada di Google", "Halaman diindeks", dan halaman ditayangkan melalui HTTPS.
+- Permintaan pengindeksan ulang dicoba, tetapi ditolak dengan "Kuota Terlampaui" (kuota harian). Permintaan baru belum diterima; Google meminta mencoba kembali besok.
+- Jangan hapus tag verifikasi dari konfigurasi atau homepage setelah verifikasi berhasil.
+
+Langkah pemeliharaan atau verifikasi ulang:
+
 1. Masuk ke https://search.google.com/search-console menggunakan akun Google pemilik website.
 2. Tambahkan properti URL Prefix `https://legaltechagency.vercel.app/`.
 3. Pilih HTML tag. Google memberikan meta `google-site-verification`.
@@ -32,6 +42,6 @@ Nilai null tidak menghasilkan tag verifikasi. Tag contoh dari pengujian tidak di
 - URL yang tidak ada dan jalur admin lama mengembalikan HTTP 404, bukan halaman utama dengan HTTP 200.
 - Validasi data terstruktur dengan https://search.google.com/test/rich-results dan gunakan URL Inspection untuk melihat akses Google.
 
-SEO teknis dan sitemap membantu discovery, tetapi bukan jaminan pengindeksan, rich result, atau peringkat pertama. Google menentukan kapan sebuah halaman di-crawl dan apakah layak ditampilkan. Verifikasi, pengiriman sitemap, dan Request Indexing memerlukan akses akun Google pemilik properti; langkah tersebut belum dilakukan hanya dengan mengubah kode.
+SEO teknis dan sitemap membantu discovery, tetapi bukan jaminan pengindeksan seluruh halaman, rich result, atau peringkat pertama. Google menentukan kapan sebuah halaman di-crawl dan apakah layak ditampilkan. Status Search Console di atas diperiksa langsung melalui akun pemilik, bukan disimpulkan dari pengujian kode.
 
 Panduan resmi: [meminta crawl ulang](https://developers.google.com/search/docs/crawling-indexing/ask-google-to-recrawl), [verifikasi Search Console](https://support.google.com/webmasters/answer/9008080), dan [data terstruktur LocalBusiness](https://developers.google.com/search/docs/appearance/structured-data/local-business).
