@@ -30,6 +30,17 @@ Result: 11 tests passed, 0 failed.
 - The embedded Google Maps area loaded in the contact section.
 - No application warning or error appeared in the inspected browser log.
 
+## Public Deployment Checks
+
+Verified on 2026-10-07 after the SEO code was pushed and deployed:
+
+- https://legaltechagency.vercel.app/ responds with HTTP 200, with the new search title and canonical pointing to that exact production origin.
+- The public homepage contains WebSite, LocalBusiness, and PostalAddress microdata and an index/follow directive. No X-Robots-Tag header preventing indexing was found.
+- Public robots.txt allows crawling and points to the production sitemap. The sitemap responds successfully and lists the six published content pages, with no admin or preview URLs.
+- The old /admin.html URL returns HTTP 404.
+- The deployed homepage was inspected in the browser; no horizontal overflow or application console warning/error was detected.
+- Google Search Console verification, sitemap submission, and Request Indexing are still pending the owner's Google property access and verification token.
+
 ## Publication Boundaries
 
 - This is a static company website, not an authenticated application.
