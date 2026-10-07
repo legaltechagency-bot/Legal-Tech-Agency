@@ -4,7 +4,7 @@ URL utama: https://legaltechagency.vercel.app/
 
 ## Yang Sudah Diterapkan
 
-- Judul dan deskripsi berbahasa Indonesia untuk layanan legalitas dan solusi digital di Tangerang.
+- Judul SEO dan judul berbagi: `Legal Tech Agency | Legalitas & Solusi Digital`, tanpa nama kota. Deskripsi dan alamat bisnis tetap mencantumkan lokasi Tangerang.
 - Satu H1 brand, hierarki heading, konten HTML statis, dan tautan layanan yang bisa dibaca tanpa JavaScript.
 - Canonical, sitemap, robots, Open Graph, dan Twitter card memakai origin produksi yang sama.
 - Microdata WebSite, LocalBusiness, dan PostalAddress sesuai nama, kontak, alamat, dan jam yang tampil di website.

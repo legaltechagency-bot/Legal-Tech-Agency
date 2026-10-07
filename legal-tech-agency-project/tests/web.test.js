@@ -155,7 +155,9 @@ test("Domain overrides, pinned production origin, and invalid origins are handle
 
 test("Search metadata and business microdata match visible business details", async () => {
   const html = await fs.readFile(path.join(publicDir, "index.html"), "utf8");
-  assert.match(html, /<title>Legal Tech Agency \| Legalitas &amp; Solusi Digital Tangerang<\/title>/);
+  assert.match(html, /<title>Legal Tech Agency \| Legalitas &amp; Solusi Digital<\/title>/);
+  assert.match(html, /property="og:title" content="Legal Tech Agency \| Legalitas &amp; Solusi Digital"/);
+  assert.match(html, /name="twitter:title" content="Legal Tech Agency \| Legalitas &amp; Solusi Digital"/);
   assert.equal((html.match(/<h1\b/g) || []).length, 1);
   assert.equal((html.match(/rel="canonical"/g) || []).length, 1);
   assert.match(html, /name="robots" content="index, follow, max-image-preview:large"/);
