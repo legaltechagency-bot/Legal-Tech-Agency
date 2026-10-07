@@ -27,7 +27,9 @@ Header keamanan dan cache dikonfigurasi di `../vercel.json` serta digunakan oleh
 
 Build menentukan origin dari `SITE_URL`, kemudian `site.config.json`, kemudian `VERCEL_PROJECT_PRODUCTION_URL` dari Vercel. URL preview sementara tidak dipakai sebagai canonical. Untuk domain khusus, gunakan URL HTTPS lengkap di `SITE_URL` lalu redeploy.
 
-Build tanpa domain menghasilkan website yang tetap berfungsi, tetapi belum menyertakan canonical atau sitemap. Build di Vercel menghasilkan canonical URL, Open Graph, sitemap, dan robots.txt sesuai domain produksi yang tersedia saat build. Aktifkan system environment variables di pengaturan proyek Vercel, atau isi `SITE_URL` jika variabel produksi tidak tersedia.
+URL produksi telah ditetapkan ke `https://legaltechagency.vercel.app/`. Build lokal dan Vercel menghasilkan canonical URL, Open Graph, sitemap, dan robots.txt untuk domain ini. Data terstruktur bisnis menggunakan microdata sehingga tetap bekerja dengan Content Security Policy tanpa mengizinkan inline JavaScript.
+
+Langkah verifikasi Search Console, token HTML Google, dan pengiriman sitemap tersedia di `SEO-GUIDE.md`. Token bisa diisi melalui `googleSiteVerification` di konfigurasi atau `GOOGLE_SITE_VERIFICATION` di Vercel, kemudian deploy ulang. Tanpa token asli, verifikasi Google belum dilakukan.
 
 ## Mengubah Konten
 

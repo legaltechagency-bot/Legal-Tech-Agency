@@ -13,7 +13,9 @@ Build Command: `node legal-tech-agency-project/scripts/build.js`.
 Output Directory: `legal-tech-agency-project/public`.
 Tidak diperlukan install dependency atau environment variable Supabase.
 
-SEO mengikuti `VERCEL_PROJECT_PRODUCTION_URL`. Untuk domain khusus, set `SITE_URL` dengan URL HTTPS lengkap lalu redeploy. Pastikan system environment variables tersedia saat build. Build lokal tanpa domain tidak menghasilkan canonical atau sitemap dengan alamat yang belum dikonfirmasi.
+SEO utama ditetapkan ke `https://legaltechagency.vercel.app/` di `legal-tech-agency-project/site.config.json`. Untuk mengganti domain, set `SITE_URL` dengan URL HTTPS lengkap atau ubah konfigurasi lalu redeploy. URL preview Vercel tidak menggantikan canonical produksi.
+
+Panduan verifikasi Google Search Console dan pengiriman sitemap tersedia di `legal-tech-agency-project/SEO-GUIDE.md`. `GOOGLE_SITE_VERIFICATION` menerima token HTML tag dari Google; jangan gunakan token contoh.
 
 ## Pengujian Lokal
 

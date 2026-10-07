@@ -13,7 +13,7 @@ let base;
 const productionDomain = "legal-tech-production.example";
 
 before(async () => {
-  const build = spawn(process.execPath, [path.join(root, "scripts", "build.js")], { env: { ...process.env, SITE_URL: "", VERCEL_PROJECT_PRODUCTION_URL: productionDomain }, stdio: "ignore", windowsHide: true });
+  const build = spawn(process.execPath, [path.join(root, "scripts", "build.js")], { env: { ...process.env, SITE_URL: `https://${productionDomain}`, GOOGLE_SITE_VERIFICATION: "", VERCEL_PROJECT_PRODUCTION_URL: productionDomain }, stdio: "ignore", windowsHide: true });
   const [code] = await once(build, "exit");
   assert.equal(code, 0, "Static build failed");
   preview = spawn(process.execPath, [path.join(root, "scripts", "preview.js")], {
@@ -92,7 +92,7 @@ test("WhatsApp message encoding and service-specific messages", async () => {
   assert.equal(new URL(links[2].href).searchParams.get("text"), links[2].dataset.message);
 });
 
-test("SEO follows the Vercel production domain and excludes removed pages", async () => {
+test("SEO canonical, sitemap and robots agree and exclude removed pages", async () => {
   const site = `https://${productionDomain}`;
   const html = await fs.readFile(path.join(publicDir, "index.html"), "utf8");
   assert.ok(html.includes(`<link rel="canonical" href="${site}/">`));
@@ -133,7 +133,7 @@ test("Vercel configuration publishes only generated static output", async () => 
   assert.ok(config.headers.find(rule => rule.source === "/(.*)").headers.some(header => header.key === "Content-Security-Policy"));
 });
 
-test("Domain override, unknown local domain, and invalid origins are handled safely", async () => {
+test("Domain overrides, pinned production origin, and invalid origins are handled safely", async () => {
   const runBuild = async (site, production) => {
     const child = spawn(process.execPath, [path.join(root, "scripts", "build.js")], {
       env: { ...process.env, SITE_URL: site, VERCEL_PROJECT_PRODUCTION_URL: production }, stdio: "ignore", windowsHide: true
@@ -143,11 +143,52 @@ test("Domain override, unknown local domain, and invalid origins are handled saf
   assert.equal(await runBuild("https://custom-domain.example", productionDomain), 0);
   assert.match(await fs.readFile(path.join(publicDir, "index.html"), "utf8"), /canonical" href="https:\/\/custom-domain\.example\//);
   assert.equal(await runBuild("", ""), 0);
-  assert.doesNotMatch(await fs.readFile(path.join(publicDir, "index.html"), "utf8"), /rel="canonical"|netlify\.app/);
-  assert.ok(!(await fs.readdir(publicDir)).includes("sitemap.xml"));
-  assert.doesNotMatch(await fs.readFile(path.join(publicDir, "robots.txt"), "utf8"), /Sitemap:/);
+  assert.match(await fs.readFile(path.join(publicDir, "index.html"), "utf8"), /canonical" href="https:\/\/legaltechagency\.vercel\.app\//);
+  assert.equal(await runBuild("", "temporary-preview.vercel.app"), 0);
+  assert.doesNotMatch(await fs.readFile(path.join(publicDir, "index.html"), "utf8"), /temporary-preview|netlify\.app|\{\{SITE_ORIGIN\}\}/);
   for (const invalid of ["http://insecure.example", "https://user:secret@invalid.example", "https://invalid.example/subpath", "https://invalid.example/?q=test"]) {
     assert.notEqual(await runBuild(invalid, productionDomain), 0);
   }
-  assert.equal(await runBuild("", productionDomain), 0);
+  assert.equal(await runBuild(`https://${productionDomain}`, productionDomain), 0);
+});
+
+test("Search metadata and business microdata match visible business details", async () => {
+  const html = await fs.readFile(path.join(publicDir, "index.html"), "utf8");
+  assert.match(html, /<title>Legal Tech Agency \| Legalitas &amp; Solusi Digital Tangerang<\/title>/);
+  assert.equal((html.match(/<h1\b/g) || []).length, 1);
+  assert.equal((html.match(/rel="canonical"/g) || []).length, 1);
+  assert.match(html, /name="robots" content="index, follow, max-image-preview:large"/);
+  assert.match(html, /name="twitter:image"/);
+  assert.match(html, /itemtype="https:\/\/schema.org\/WebSite"/);
+  assert.match(html, /itemtype="https:\/\/schema.org\/LocalBusiness"/);
+  assert.match(html, /itemtype="https:\/\/schema.org\/PostalAddress"/);
+  assert.match(html, /itemprop="telephone" content="\+6285181760072"/);
+  assert.match(html, /itemprop="addressLocality">Kota Tangerang/);
+  assert.match(html, /itemprop="postalCode">15141/);
+  assert.match(html, /itemprop="addressCountry" content="ID"/);
+  assert.match(html, /itemprop="openingHours" content="Mo-Fr 09:00-17:00"/);
+  assert.match(html, new RegExp(`itemprop="url" content="https://${productionDomain.replaceAll(".", "\\.")}/"`));
+  assert.doesNotMatch(html, /aggregateRating|reviewRating|google-site-verification|\{\{SITE_ORIGIN\}\}/);
+  const titles = [];
+  for (const file of (await fs.readdir(publicDir)).filter(file => file.endsWith(".html"))) {
+    const page = await fs.readFile(path.join(publicDir, file), "utf8");
+    titles.push(page.match(/<title>([^<]+)<\/title>/)[1]);
+    assert.match(page, file === "404.html" ? /name="robots" content="noindex, follow"/ : /name="robots" content="index, follow/);
+  }
+  assert.equal(titles.length, new Set(titles).size);
+});
+
+test("Search Console verification is opt-in and rejects malformed tokens", async () => {
+  const runBuild = async token => {
+    const child = spawn(process.execPath, [path.join(root, "scripts", "build.js")], {
+      env: { ...process.env, SITE_URL: `https://${productionDomain}`, GOOGLE_SITE_VERIFICATION: token }, stdio: "ignore", windowsHide: true
+    });
+    return (await once(child, "exit"))[0];
+  };
+  assert.equal(await runBuild("Test_SearchConsole-Token_123"), 0);
+  assert.match(await fs.readFile(path.join(publicDir, "index.html"), "utf8"), /name="google-site-verification" content="Test_SearchConsole-Token_123"/);
+  assert.doesNotMatch(await fs.readFile(path.join(publicDir, "privacy.html"), "utf8"), /google-site-verification/);
+  assert.notEqual(await runBuild('bad"><script>'), 0);
+  assert.equal(await runBuild(""), 0);
+  assert.doesNotMatch(await fs.readFile(path.join(publicDir, "index.html"), "utf8"), /google-site-verification/);
 });

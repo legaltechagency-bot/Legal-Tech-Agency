@@ -2,12 +2,12 @@
 
 Test date: 2026-10-07
 Target: generated `public` directory, previewed at http://localhost:4174/
-Hosting target: Vercel. Production origin is resolved at build time; no unconfirmed domain is hardcoded.
+Hosting target: Vercel. Confirmed production origin: https://legaltechagency.vercel.app/
 
 ## Automated Checks
 
 Command: `node --test tests/web.test.js`
-Result: 9 tests passed, 0 failed.
+Result: 11 tests passed, 0 failed.
 
 - Deployment output contains only the explicitly allowed static files.
 - HTML pages, local links, anchor targets, scripts, styles, and images resolve.
@@ -17,6 +17,7 @@ Result: 9 tests passed, 0 failed.
 - Admin, article, API, database, and private source paths are not served; POST is rejected.
 - Security headers and MIME types are present in the local static preview.
 - Root Vercel configuration builds and publishes only generated static output without backend functions or catch-all rewrites.
+- Search metadata, business microdata, indexing directives, production origin precedence, and opt-in Search Console verification are covered.
 
 ## Browser Checks
 
@@ -36,6 +37,7 @@ Result: 9 tests passed, 0 failed.
 - WhatsApp destinations and message text were validated; no message was sent and account ownership was not independently verified.
 - Google Maps and WhatsApp require an internet connection and remain third-party services.
 - Hosting deployment, domain availability/ownership, production HTTPS, and actual hosting response headers must be checked after publishing. Local results are not a claim that the website is already live.
-- The prior Netlify domain and hosting configuration are removed. The Vercel project resolves its production domain during build.
+- The prior Netlify domain and hosting configuration are removed. The supplied Vercel domain is pinned as the production origin.
+- Search Console ownership verification and an indexing request require the user's Google property access and are not completed by the code tests.
 
 Deploy only the contents of `public`, or the deployment ZIP. Do not publish the previous demo backup or the entire source directory.
