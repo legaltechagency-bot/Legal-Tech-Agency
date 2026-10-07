@@ -1,0 +1,9 @@
+*.zip
+*.log
+legal-tech-agency-static-preview.jpg
+node_modules/
+.vercel/
+.env
+.env.*
+!.env.example
+legal-tech-agency-project/public/

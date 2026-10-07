@@ -1,0 +1,12 @@
+{
+  "name": "legal-tech-agency-static",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Static Legal Tech Agency website with WhatsApp consultation",
+  "scripts": {
+    "build": "node scripts/build.js",
+    "test": "node --test tests/web.test.js",
+    "preview": "node scripts/preview.js"
+  },
+  "engines": { "node": ">=22" }
+}
