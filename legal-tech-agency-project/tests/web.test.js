@@ -5,6 +5,7 @@ const path = require("node:path");
 const vm = require("node:vm");
 const { spawn } = require("node:child_process");
 const { once } = require("node:events");
+const siteConfig = require("../site.config.json");
 
 const root = path.resolve(__dirname, "..");
 const publicDir = path.join(root, "public");
@@ -168,7 +169,8 @@ test("Search metadata and business microdata match visible business details", as
   assert.match(html, /itemprop="addressCountry" content="ID"/);
   assert.match(html, /itemprop="openingHours" content="Mo-Fr 09:00-17:00"/);
   assert.match(html, new RegExp(`itemprop="url" content="https://${productionDomain.replaceAll(".", "\\.")}/"`));
-  assert.doesNotMatch(html, /aggregateRating|reviewRating|google-site-verification|\{\{SITE_ORIGIN\}\}/);
+  assert.doesNotMatch(html, /aggregateRating|reviewRating|\{\{SITE_ORIGIN\}\}/);
+  if (siteConfig.googleSiteVerification) assert.ok(html.includes(`<meta name="google-site-verification" content="${siteConfig.googleSiteVerification}">`));
   const titles = [];
   for (const file of (await fs.readdir(publicDir)).filter(file => file.endsWith(".html"))) {
     const page = await fs.readFile(path.join(publicDir, file), "utf8");
@@ -178,7 +180,7 @@ test("Search metadata and business microdata match visible business details", as
   assert.equal(titles.length, new Set(titles).size);
 });
 
-test("Search Console verification is opt-in and rejects malformed tokens", async () => {
+test("Search Console verification uses configuration, supports overrides, and rejects malformed tokens", async () => {
   const runBuild = async token => {
     const child = spawn(process.execPath, [path.join(root, "scripts", "build.js")], {
       env: { ...process.env, SITE_URL: `https://${productionDomain}`, GOOGLE_SITE_VERIFICATION: token }, stdio: "ignore", windowsHide: true
@@ -190,5 +192,11 @@ test("Search Console verification is opt-in and rejects malformed tokens", async
   assert.doesNotMatch(await fs.readFile(path.join(publicDir, "privacy.html"), "utf8"), /google-site-verification/);
   assert.notEqual(await runBuild('bad"><script>'), 0);
   assert.equal(await runBuild(""), 0);
-  assert.doesNotMatch(await fs.readFile(path.join(publicDir, "index.html"), "utf8"), /google-site-verification/);
+  const html = await fs.readFile(path.join(publicDir, "index.html"), "utf8");
+  if (siteConfig.googleSiteVerification) {
+    assert.ok(html.includes(`<meta name="google-site-verification" content="${siteConfig.googleSiteVerification}">`));
+  } else {
+    assert.doesNotMatch(html, /google-site-verification/);
+  }
+  assert.doesNotMatch(html, /Test_SearchConsole-Token_123/);
 });
