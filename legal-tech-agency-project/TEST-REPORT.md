@@ -37,7 +37,7 @@ Verified on 2026-11-08 after commit `9e78d3e` was pushed:
 - The Netlify homepage switched from HTTP 404 to HTTP 200 and serves the expected title and production canonical. The former Vercel homepage returned HTTP 402 before the migration; no redirect was configured there.
 - All six sitemap URLs return HTTP 200 over HTTPS with matching canonicals and no URL rewrite. `robots.txt` returns HTTP 200 and points to the new sitemap.
 - Security headers are present and no `X-Robots-Tag: noindex` was found on the homepage. The official WhatsApp destination is present, and `/admin.html` returns HTTP 404.
-- The Netlify URL Prefix property still needs verification and sitemap submission. An accessible website and sitemap do not prove indexing.
+- After commit `1dbf7c7`, the public homepage served the approved Netlify verification tag. Google Search Console confirmed HTML tag ownership verification for `legaltechagency@gmail.com` and accepted `sitemap.xml` on 2026-11-08. Sitemap processing and indexing were not checked.
 
 Historical Vercel checks on 2026-10-07, before the move:
 
@@ -58,6 +58,6 @@ Historical Vercel checks on 2026-10-07, before the move:
 - WhatsApp destinations and message text were validated; no message was sent and account ownership was not independently verified.
 - Google Maps and WhatsApp require an internet connection and remain third-party services.
 - Confirm production HTTP, HTTPS, and response headers after deploying to Netlify. Local tests alone do not prove a site is live.
-- Search Console ownership and indexing of the old Vercel URL were checked on 2026-10-07. They do not carry over to the Netlify URL.
+- Search Console verification of Netlify is separate from the old Vercel property. Sitemap submission does not prove indexing.
 
 Deploy only the contents of `public`, or the deployment ZIP. Do not publish the previous demo backup or the entire source directory.

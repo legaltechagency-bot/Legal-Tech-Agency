@@ -29,7 +29,7 @@ Build menentukan origin dari `SITE_URL` atau `site.config.json`. URL preview sem
 
 URL produksi ditetapkan ke `https://legaltechagency.netlify.app/`. Build menghasilkan canonical URL, Open Graph, sitemap, dan robots.txt untuk domain ini. Data terstruktur bisnis menggunakan microdata sehingga tetap bekerja dengan Content Security Policy tanpa mengizinkan inline JavaScript.
 
-Verifikasi Search Console yang lama berlaku untuk properti Vercel. Setelah Netlify aktif, verifikasi properti URL Prefix baru dan kirim sitemap barunya sesuai `SEO-GUIDE.md`.
+Properti Netlify sudah diverifikasi di Google Search Console melalui tag HTML pada 2026-11-08 dan sitemap berhasil dikirim. Pertahankan tag verifikasi yang baru. Panduan pemeliharaan tersedia di `SEO-GUIDE.md`.
 
 ## Mengubah Konten
 

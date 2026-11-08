@@ -16,7 +16,9 @@ URL utama: https://legaltechagency.netlify.app/
 
 Properti lama `https://legaltechagency.vercel.app/` sudah diverifikasi pada 2026-10-07, dan Google saat itu melaporkan homepage diindeks serta 6 halaman ditemukan dari sitemap. Status tersebut tidak berlaku untuk domain Netlify.
 
-Setelah Netlify mengembalikan HTTP 200, tambahkan dan verifikasi properti baru:
+Pada 2026-11-08, Google mengonfirmasi kepemilikan properti URL Prefix `https://legaltechagency.netlify.app/` untuk `legaltechagency@gmail.com` melalui tag HTML. `sitemap.xml` berhasil dikirim. Status pemrosesan sitemap dan pengindeksan URL baru belum diperiksa. Pertahankan tag yang sudah terpasang pada homepage.
+
+Langkah untuk menyiapkan ulang atau memelihara properti:
 
 1. Masuk ke https://search.google.com/search-console menggunakan akun Google pemilik website.
 2. Tambahkan properti URL Prefix `https://legaltechagency.netlify.app/`.
