@@ -32,7 +32,12 @@ Result: 11 tests passed, 0 failed.
 
 ## Public Deployment Checks
 
-On 2026-11-08, the Netlify homepage returned HTTP 404 and the former Vercel homepage returned HTTP 402. The Netlify build passed locally; this does not confirm a production deploy or indexing. The Netlify URL Prefix property still needs verification and sitemap submission after publishing.
+Verified on 2026-11-08 after commit `9e78d3e` was pushed:
+
+- The Netlify homepage switched from HTTP 404 to HTTP 200 and serves the expected title and production canonical. The former Vercel homepage returned HTTP 402 before the migration; no redirect was configured there.
+- All six sitemap URLs return HTTP 200 over HTTPS with matching canonicals and no URL rewrite. `robots.txt` returns HTTP 200 and points to the new sitemap.
+- Security headers are present and no `X-Robots-Tag: noindex` was found on the homepage. The official WhatsApp destination is present, and `/admin.html` returns HTTP 404.
+- The Netlify URL Prefix property still needs verification and sitemap submission. An accessible website and sitemap do not prove indexing.
 
 Historical Vercel checks on 2026-10-07, before the move:
 
