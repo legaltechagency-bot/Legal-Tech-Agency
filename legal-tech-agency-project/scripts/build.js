@@ -3,12 +3,12 @@ const path = require("node:path");
 const root = path.resolve(__dirname, "..");
 const output = path.join(root, "public");
 const pages = ["index.html", "404.html", "privacy.html", "terms.html", "disclaimer.html", "cookies.html", "consultation-terms.html"];
-const files = [...pages, "styles.css", "app.js", "contact.js", "favicon.svg"];
+const files = [...pages, "styles.css", "app.js", "contact.js", "favicon.svg", "_headers"];
 const assets = ["legal-tech-mark.png", "legal-tech-hero-command-center.png", "legal-tech-operations-illustration.png"];
 
 async function build() {
   const config = JSON.parse(await fs.readFile(path.join(root, "site.config.json"), "utf8"));
-  const origin = process.env.SITE_URL || config.url || (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : null);
+  const origin = process.env.SITE_URL || config.url;
   const site = origin ? new URL(origin) : null;
   if (site && (site.protocol !== "https:" || site.username || site.password || site.pathname !== "/" || site.search || site.hash)) {
     throw new Error("SITE_URL must be an HTTPS site origin");

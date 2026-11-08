@@ -1,0 +1,10 @@
+[build]
+  base = "."
+  command = "node legal-tech-agency-project/scripts/build.js"
+  publish = "legal-tech-agency-project/public"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+[build.processing.html]
+  pretty_urls = false

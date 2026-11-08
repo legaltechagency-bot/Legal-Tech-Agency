@@ -6,8 +6,18 @@ const mime = { ".html": "text/html; charset=utf-8", ".css": "text/css; charset=u
 
 async function start() {
   await fs.access(path.join(root, "index.html"));
-  const config = JSON.parse(await fs.readFile(path.resolve(__dirname, "..", "..", "vercel.json"), "utf8"));
-  const headers = Object.fromEntries(config.headers.find(rule => rule.source === "/(.*)").headers.map(header => [header.key, header.value]));
+  const rules = new Map();
+  let rule;
+  for (const line of (await fs.readFile(path.join(root, "_headers"), "utf8")).split(/\r?\n/)) {
+    if (line.startsWith("/")) {
+      rule = {};
+      rules.set(line.trim(), rule);
+    } else if (rule && line.includes(":")) {
+      const separator = line.indexOf(":");
+      rule[line.slice(0, separator).trim()] = line.slice(separator + 1).trim();
+    }
+  }
+  const headers = { "Cache-Control": "public, max-age=0, must-revalidate", ...rules.get("/*") };
   const server = http.createServer(async (req, res) => {
     if (!["GET", "HEAD"].includes(req.method)) {
       res.writeHead(405, { ...headers, Allow: "GET, HEAD" }); res.end(); return;
@@ -19,7 +29,7 @@ async function start() {
       const inside = path.relative(root, target);
       if (inside.startsWith("..") || path.isAbsolute(inside) || relative.split(/[\\/]/).some(part => part.startsWith("_") || part.startsWith("."))) throw new Error("Not found");
       const content = await fs.readFile(target);
-      const assetHeaders = pathname.startsWith("/assets/") ? Object.fromEntries(config.headers.find(rule => rule.source === "/assets/(.*)").headers.map(header => [header.key, header.value])) : {};
+      const assetHeaders = pathname.startsWith("/assets/") ? rules.get("/assets/*") : {};
       res.writeHead(200, { ...headers, ...assetHeaders, "Content-Type": mime[path.extname(target)] || "application/octet-stream" });
       res.end(req.method === "HEAD" ? undefined : content);
     } catch {

@@ -14,27 +14,27 @@ node scripts/preview.js
 
 Tidak diperlukan pemasangan dependency. Node.js 22 atau lebih baru hanya diperlukan untuk build, tes, dan preview lokal; hasil build berjalan sebagai HTML/CSS/JavaScript statis. Hanya folder `public` yang dipublikasikan.
 
-## Vercel
+## Netlify
 
-Import repositori GitHub menggunakan root repositori (`./`). Jangan memilih folder ini sebagai Root Directory karena `vercel.json` berada satu tingkat di atasnya. Framework Preset adalah Other. Build command dan output directory otomatis mengikuti konfigurasi.
+Hubungkan proyek Netlify yang sudah ada ke branch `main` repositori GitHub. Gunakan root repositori (`./`) sebagai Base directory dan kosongkan Package directory agar Netlify memakai `../netlify.toml`.
 
 Build command: `node legal-tech-agency-project/scripts/build.js`.
-Output directory: `legal-tech-agency-project/public`.
+Publish directory: `legal-tech-agency-project/public`.
 
-Header keamanan dan cache dikonfigurasi di `../vercel.json` serta digunakan oleh preview lokal. Konfigurasi Netlify sebelumnya sudah dihapus. Kode ini tidak memerlukan backend atau environment variable Supabase.
+Build menyalin `_headers` ke `public` sehingga header keamanan dan cache ikut dalam deploy Git maupun ZIP. Preview lokal juga membaca file tersebut. Website tetap statis dan tidak membutuhkan backend.
 
 ## Domain dan SEO
 
-Build menentukan origin dari `SITE_URL`, kemudian `site.config.json`, kemudian `VERCEL_PROJECT_PRODUCTION_URL` dari Vercel. URL preview sementara tidak dipakai sebagai canonical. Untuk domain khusus, gunakan URL HTTPS lengkap di `SITE_URL` lalu redeploy.
+Build menentukan origin dari `SITE_URL` atau `site.config.json`. URL preview sementara tidak dipakai sebagai canonical. Untuk domain khusus, gunakan URL HTTPS lengkap di `SITE_URL` lalu redeploy.
 
-URL produksi telah ditetapkan ke `https://legaltechagency.vercel.app/`. Build lokal dan Vercel menghasilkan canonical URL, Open Graph, sitemap, dan robots.txt untuk domain ini. Data terstruktur bisnis menggunakan microdata sehingga tetap bekerja dengan Content Security Policy tanpa mengizinkan inline JavaScript.
+URL produksi ditetapkan ke `https://legaltechagency.netlify.app/`. Build menghasilkan canonical URL, Open Graph, sitemap, dan robots.txt untuk domain ini. Data terstruktur bisnis menggunakan microdata sehingga tetap bekerja dengan Content Security Policy tanpa mengizinkan inline JavaScript.
 
-Search Console telah diverifikasi dengan HTML tag pada 2026-10-07. Google berhasil memproses sitemap (6 halaman ditemukan), dan homepage berstatus diindeks. Permintaan pengindeksan ulang terbaru ditolak karena kuota harian; detail hasil dan panduan pemeliharaan tersedia di `SEO-GUIDE.md`. Pertahankan token asli di `googleSiteVerification` atau `GOOGLE_SITE_VERIFICATION` di Vercel.
+Verifikasi Search Console yang lama berlaku untuk properti Vercel. Setelah Netlify aktif, verifikasi properti URL Prefix baru dan kirim sitemap barunya sesuai `SEO-GUIDE.md`.
 
 ## Mengubah Konten
 
-Edit `index.html` untuk isi website, `styles.css` untuk tampilan, dan `contact.js` untuk pesan WhatsApp. Layanan, FAQ, alamat, serta nomor PIC ada di HTML. Setelah perubahan, jalankan build atau push ke branch yang terhubung dengan Vercel untuk redeploy.
+Edit `index.html` untuk isi website, `styles.css` untuk tampilan, dan `contact.js` untuk pesan WhatsApp. Layanan, FAQ, alamat, serta nomor PIC ada di HTML. Setelah perubahan, jalankan build atau push ke branch yang terhubung dengan Netlify untuk redeploy.
 
 Desain menggunakan aset lokal. Google Maps dan WhatsApp memerlukan internet. Publikasi hanya menggunakan output build; backup demo, ZIP, log, dokumentasi, dan alat pengujian bukan konten publik.
 
-Konfigurasi mengikuti [dokumentasi Vercel](https://vercel.com/docs/project-configuration/vercel-json). Push GitHub bukan bukti website sudah live: import atau hubungkan repositori ke Vercel lalu periksa hasil deployment.
+Deploy manual: unggah `legal-tech-agency-static-public.zip` di tab Deploys proyek Netlify yang sudah ada. Jangan unggah ZIP proyek atau backup demo sebagai konten publik.

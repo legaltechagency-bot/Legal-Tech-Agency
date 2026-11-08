@@ -1,6 +1,6 @@
 # SEO dan Google Search Console
 
-URL utama: https://legaltechagency.vercel.app/
+URL utama: https://legaltechagency.netlify.app/
 
 ## Yang Sudah Diterapkan
 
@@ -14,34 +14,30 @@ URL utama: https://legaltechagency.vercel.app/
 
 ## Verifikasi Search Console
 
-Status aktual pada 2026-10-07 untuk akun pemilik `legaltechagency@gmail.com`:
+Properti lama `https://legaltechagency.vercel.app/` sudah diverifikasi pada 2026-10-07, dan Google saat itu melaporkan homepage diindeks serta 6 halaman ditemukan dari sitemap. Status tersebut tidak berlaku untuk domain Netlify.
 
-- Kepemilikan URL Prefix `https://legaltechagency.vercel.app/` berhasil diverifikasi dengan HTML tag yang sudah terpasang di homepage produksi.
-- `sitemap.xml` berhasil dikirim dan diproses Google; 6 halaman ditemukan. Ini bukan berarti keenam halaman sudah diindeks.
-- URL Inspection homepage menampilkan "URL ada di Google", "Halaman diindeks", dan halaman ditayangkan melalui HTTPS.
-- Permintaan pengindeksan ulang dicoba, tetapi ditolak dengan "Kuota Terlampaui" (kuota harian). Permintaan baru belum diterima; Google meminta mencoba kembali besok.
-- Jangan hapus tag verifikasi dari konfigurasi atau homepage setelah verifikasi berhasil.
-
-Langkah pemeliharaan atau verifikasi ulang:
+Setelah Netlify mengembalikan HTTP 200, tambahkan dan verifikasi properti baru:
 
 1. Masuk ke https://search.google.com/search-console menggunakan akun Google pemilik website.
-2. Tambahkan properti URL Prefix `https://legaltechagency.vercel.app/`.
+2. Tambahkan properti URL Prefix `https://legaltechagency.netlify.app/`.
 3. Pilih HTML tag. Google memberikan meta `google-site-verification`.
-4. Masukkan hanya nilai `content` dari tag ke `googleSiteVerification` di `site.config.json`, atau set environment variable Vercel `GOOGLE_SITE_VERIFICATION` dengan nilai yang sama. Jangan masukkan keseluruhan tag HTML.
+4. Masukkan hanya nilai `content` yang ditampilkan untuk properti baru ke `googleSiteVerification` di `site.config.json`, atau set environment variable Netlify `GOOGLE_SITE_VERIFICATION` dengan scope Builds. Jangan masukkan keseluruhan tag HTML.
 5. Build/deploy ulang, periksa tag pada sumber halaman utama, lalu klik Verify di Search Console.
-6. Pada Sitemaps, kirim `sitemap.xml`.
+6. Pada Sitemaps di properti baru, kirim `sitemap.xml`.
 7. Pada URL Inspection, periksa URL utama, lakukan Test Live URL, lalu Request Indexing jika memenuhi syarat.
 
-Nilai null tidak menghasilkan tag verifikasi. Tag contoh dari pengujian tidak dipublikasikan. Token HTML ini bukan password akun Google; jangan berikan password atau kode OTP kepada orang lain.
+Nilai null tidak menghasilkan tag verifikasi. Setelah verifikasi berhasil, pertahankan tag untuk properti baru. Tag contoh dari pengujian tidak dipublikasikan. Token HTML ini bukan password akun Google; jangan berikan password atau kode OTP kepada orang lain.
 
 ## Pemeriksaan Setelah Deployment
 
 - Halaman utama: HTTP 200, tidak meminta login, tidak memiliki noindex atau header X-Robots-Tag yang melarang indexing.
-- Canonical tepat `https://legaltechagency.vercel.app/`, bukan URL preview atau Netlify.
+- Canonical tepat `https://legaltechagency.netlify.app/`, bukan URL preview atau Vercel.
 - `robots.txt` dan `sitemap.xml` dapat diakses dengan HTTP 200.
 - URL yang tidak ada dan jalur admin lama mengembalikan HTTP 404, bukan halaman utama dengan HTTP 200.
 - Validasi data terstruktur dengan https://search.google.com/test/rich-results dan gunakan URL Inspection untuk melihat akses Google.
 
-SEO teknis dan sitemap membantu discovery, tetapi bukan jaminan pengindeksan seluruh halaman, rich result, atau peringkat pertama. Google menentukan kapan sebuah halaman di-crawl dan apakah layak ditampilkan. Status Search Console di atas diperiksa langsung melalui akun pemilik, bukan disimpulkan dari pengujian kode.
+Jika deployment Vercel lama dapat diaktifkan lagi, arahkan URL lama dengan redirect permanen ke URL Netlify yang sepadan setelah Netlify aktif. Redirect lintas domain harus disajikan oleh host lama. Jangan hapus properti lama dari Search Console jika masih diperlukan untuk memantau migrasi.
 
-Panduan resmi: [meminta crawl ulang](https://developers.google.com/search/docs/crawling-indexing/ask-google-to-recrawl), [verifikasi Search Console](https://support.google.com/webmasters/answer/9008080), dan [data terstruktur LocalBusiness](https://developers.google.com/search/docs/appearance/structured-data/local-business).
+SEO teknis dan sitemap membantu discovery, tetapi bukan jaminan pengindeksan seluruh halaman, rich result, atau peringkat pertama. Google menentukan kapan sebuah halaman di-crawl dan apakah layak ditampilkan.
+
+Panduan resmi: [pindah domain](https://developers.google.com/search/docs/crawling-indexing/site-move-with-url-changes), [meminta crawl ulang](https://developers.google.com/search/docs/crawling-indexing/ask-google-to-recrawl), [verifikasi Search Console](https://support.google.com/webmasters/answer/9008080), dan [data terstruktur LocalBusiness](https://developers.google.com/search/docs/appearance/structured-data/local-business).

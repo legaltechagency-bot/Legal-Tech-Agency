@@ -14,7 +14,7 @@ let base;
 const productionDomain = "legal-tech-production.example";
 
 before(async () => {
-  const build = spawn(process.execPath, [path.join(root, "scripts", "build.js")], { env: { ...process.env, SITE_URL: `https://${productionDomain}`, GOOGLE_SITE_VERIFICATION: "", VERCEL_PROJECT_PRODUCTION_URL: productionDomain }, stdio: "ignore", windowsHide: true });
+  const build = spawn(process.execPath, [path.join(root, "scripts", "build.js")], { env: { ...process.env, SITE_URL: `https://${productionDomain}`, GOOGLE_SITE_VERIFICATION: "" }, stdio: "ignore", windowsHide: true });
   const [code] = await once(build, "exit");
   assert.equal(code, 0, "Static build failed");
   preview = spawn(process.execPath, [path.join(root, "scripts", "preview.js")], {
@@ -41,7 +41,7 @@ after(async () => {
 
 test("Publish directory contains only the static website", async () => {
   const files = await fs.readdir(publicDir);
-  assert.deepEqual(files.sort(), ["404.html", "app.js", "assets", "consultation-terms.html", "contact.js", "cookies.html", "disclaimer.html", "favicon.svg", "index.html", "privacy.html", "robots.txt", "sitemap.xml", "styles.css", "terms.html"].sort());
+  assert.deepEqual(files.sort(), ["404.html", "_headers", "app.js", "assets", "consultation-terms.html", "contact.js", "cookies.html", "disclaimer.html", "favicon.svg", "index.html", "privacy.html", "robots.txt", "sitemap.xml", "styles.css", "terms.html"].sort());
   for (const file of files.filter(file => /\.(html|js)$/.test(file))) {
     const content = await fs.readFile(path.join(publicDir, file), "utf8");
     assert.doesNotMatch(content, /(?:localStorage|sessionStorage)\s*\.|\/api\/|supabase|LegalTech2026|data-admin|data-articles|id="insight"|article\.html|newsletter|<form\b/i, file);
@@ -104,7 +104,7 @@ test("SEO canonical, sitemap and robots agree and exclude removed pages", async 
 });
 
 test("Old admin, API, database and source files are not publicly served", async () => {
-  for (const url of ["/admin.html", "/admin.js", "/article.html", "/api/data", "/api/records", "/data/db.json", "/server.js", "/package.json", "/scripts/build.js", "/missing", "/deep/missing", "/%2e%2e%5cREADME.md"]) {
+  for (const url of ["/admin.html", "/admin.js", "/article.html", "/api/data", "/api/records", "/data/db.json", "/server.js", "/package.json", "/netlify.toml", "/_headers", "/scripts/build.js", "/missing", "/deep/missing", "/%2e%2e%5cREADME.md"]) {
     const response = await fetch(base + url);
     assert.equal(response.status, 404, url);
     assert.match(await response.text(), /Halaman Tidak Ditemukan/);
@@ -123,34 +123,40 @@ test("Preview enforces static-site security headers and serves correct media typ
   assert.equal((await fetch(base + "/assets/legal-tech-mark.png")).headers.get("cache-control"), "public, max-age=86400");
 });
 
-test("Vercel configuration publishes only generated static output", async () => {
-  const config = JSON.parse(await fs.readFile(path.resolve(root, "..", "vercel.json"), "utf8"));
-  assert.equal(config.framework, null);
-  assert.equal(config.installCommand, "");
-  assert.equal(config.buildCommand, "node legal-tech-agency-project/scripts/build.js");
-  assert.equal(config.outputDirectory, "legal-tech-agency-project/public");
-  assert.equal(config.cleanUrls, false);
-  assert.ok(!config.rewrites && !config.functions, "No catch-all or backend needed");
-  assert.ok(config.headers.find(rule => rule.source === "/(.*)").headers.some(header => header.key === "Content-Security-Policy"));
+test("Netlify configuration publishes only generated static output", async () => {
+  const config = await fs.readFile(path.resolve(root, "..", "netlify.toml"), "utf8");
+  assert.match(config, /^\[build\]\s+base = "\."\s+command = "node legal-tech-agency-project\/scripts\/build\.js"\s+publish = "legal-tech-agency-project\/public"/m);
+  assert.match(config, /^\[build\.processing\.html\]\s+pretty_urls = false/m);
+  assert.doesNotMatch(config, /\[\[redirects\]\]|\[(?:functions|edge_functions)\]/, "No catch-all or backend needed");
+  const headers = await fs.readFile(path.join(publicDir, "_headers"), "utf8");
+  assert.equal(headers, await fs.readFile(path.join(root, "_headers"), "utf8"));
 });
 
 test("Domain overrides, pinned production origin, and invalid origins are handled safely", async () => {
-  const runBuild = async (site, production) => {
+  const runBuild = async site => {
     const child = spawn(process.execPath, [path.join(root, "scripts", "build.js")], {
-      env: { ...process.env, SITE_URL: site, VERCEL_PROJECT_PRODUCTION_URL: production }, stdio: "ignore", windowsHide: true
+      env: { ...process.env, SITE_URL: site, CONTEXT: "deploy-preview", URL: "https://unrelated.netlify.app", DEPLOY_PRIME_URL: "https://deploy-preview-1--legaltechagency.netlify.app" }, stdio: "ignore", windowsHide: true
     });
     return (await once(child, "exit"))[0];
   };
-  assert.equal(await runBuild("https://custom-domain.example", productionDomain), 0);
+  assert.equal(await runBuild("https://custom-domain.example"), 0);
   assert.match(await fs.readFile(path.join(publicDir, "index.html"), "utf8"), /canonical" href="https:\/\/custom-domain\.example\//);
-  assert.equal(await runBuild("", ""), 0);
-  assert.match(await fs.readFile(path.join(publicDir, "index.html"), "utf8"), /canonical" href="https:\/\/legaltechagency\.vercel\.app\//);
-  assert.equal(await runBuild("", "temporary-preview.vercel.app"), 0);
-  assert.doesNotMatch(await fs.readFile(path.join(publicDir, "index.html"), "utf8"), /temporary-preview|netlify\.app|\{\{SITE_ORIGIN\}\}/);
-  for (const invalid of ["http://insecure.example", "https://user:secret@invalid.example", "https://invalid.example/subpath", "https://invalid.example/?q=test"]) {
-    assert.notEqual(await runBuild(invalid, productionDomain), 0);
+  assert.equal(await runBuild(""), 0);
+  const origin = "https://legaltechagency.netlify.app";
+  const sitemap = await fs.readFile(path.join(publicDir, "sitemap.xml"), "utf8");
+  assert.equal((sitemap.match(/<loc>/g) || []).length, 6);
+  for (const [, url] of sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)) {
+    assert.equal(new URL(url).origin, origin);
+    const html = await fs.readFile(path.join(publicDir, new URL(url).pathname.slice(1) || "index.html"), "utf8");
+    assert.ok(html.includes(`<link rel="canonical" href="${url}">`));
+    assert.ok(html.includes(`<meta property="og:url" content="${url}">`));
+    assert.doesNotMatch(html, /deploy-preview|unrelated\.netlify\.app|\.vercel\.app|\{\{SITE_ORIGIN\}\}/);
   }
-  assert.equal(await runBuild(`https://${productionDomain}`, productionDomain), 0);
+  assert.match(await fs.readFile(path.join(publicDir, "robots.txt"), "utf8"), /^Sitemap: https:\/\/legaltechagency\.netlify\.app\/sitemap\.xml$/m);
+  for (const invalid of ["http://insecure.example", "https://user:secret@invalid.example", "https://invalid.example/subpath", "https://invalid.example/?q=test"]) {
+    assert.notEqual(await runBuild(invalid), 0);
+  }
+  assert.equal(await runBuild(`https://${productionDomain}`), 0);
 });
 
 test("Search metadata and business microdata match visible business details", async () => {
