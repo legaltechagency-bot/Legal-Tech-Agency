@@ -38,7 +38,7 @@ Nilai null tidak menghasilkan tag verifikasi. Setelah verifikasi berhasil, perta
 - URL yang tidak ada dan jalur admin lama mengembalikan HTTP 404, bukan halaman utama dengan HTTP 200.
 - Validasi data terstruktur dengan https://search.google.com/test/rich-results dan gunakan URL Inspection untuk melihat akses Google.
 
-Jika deployment Vercel lama dapat diaktifkan lagi, arahkan URL lama dengan redirect permanen ke URL Netlify yang sepadan setelah Netlify aktif. Redirect lintas domain harus disajikan oleh host lama. Jangan hapus properti lama dari Search Console jika masih diperlukan untuk memantau migrasi.
+Konfigurasi `../vercel.json` memakai redirect permanen HTTP 308 dari setiap jalur Vercel ke jalur Netlify yang sepadan. Publikasikan konfigurasi ini ke Vercel, lalu periksa status, header Location, query string, dan hasil akhir tanpa loop. Proyek/domain Vercel lama harus tetap aktif untuk menyajikan redirect. Jangan hapus properti lama dari Search Console jika masih diperlukan untuk memantau migrasi. Redirect tidak menjamin homepage Netlify langsung diindeks.
 
 SEO teknis dan sitemap membantu discovery, tetapi bukan jaminan pengindeksan seluruh halaman, rich result, atau peringkat pertama. Google menentukan kapan sebuah halaman di-crawl dan apakah layak ditampilkan.
 

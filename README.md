@@ -26,4 +26,8 @@ node legal-tech-agency-project/scripts/preview.js
 
 Panduan konten dan hasil pengujian tersedia di `legal-tech-agency-project/README.md` dan `legal-tech-agency-project/TEST-REPORT.md`. ZIP, backup demo, output build, dan log lokal tidak masuk Git.
 
-Konfigurasi mengikuti [dokumentasi Netlify](https://docs.netlify.com/build/configure-builds/file-based-configuration/). Push GitHub hanya memicu deploy Netlify jika repositori sudah terhubung. `vercel.json` adalah konfigurasi lama dan tidak dipakai oleh Netlify.
+Konfigurasi mengikuti [dokumentasi Netlify](https://docs.netlify.com/build/configure-builds/file-based-configuration/). Push GitHub hanya memicu deploy Netlify jika repositori sudah terhubung.
+
+## Redirect Vercel Lama
+
+`vercel.json` mengarahkan semua jalur deployment Vercel ke `https://legaltechagency.netlify.app/` melalui redirect permanen HTTP 308. Jalur halaman dan query string dipertahankan. Konfigurasi ini hanya dipakai Vercel; Netlify tetap menyajikan website tanpa redirect balik. Pertahankan proyek/domain lama aktif agar redirect tetap berjalan.

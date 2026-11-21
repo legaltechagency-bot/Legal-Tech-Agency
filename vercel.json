@@ -5,6 +5,13 @@
   "buildCommand": "node legal-tech-agency-project/scripts/build.js",
   "outputDirectory": "legal-tech-agency-project/public",
   "cleanUrls": false,
+  "redirects": [
+    {
+      "source": "/:path*",
+      "destination": "https://legaltechagency.netlify.app/:path*",
+      "permanent": true
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",
