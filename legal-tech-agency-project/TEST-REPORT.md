@@ -7,7 +7,7 @@ Configured production origin: https://legaltechagency.netlify.app/
 ## Automated Checks
 
 Command: `node --test tests/web.test.js`
-Result: 12 tests passed, 0 failed.
+Result: 13 tests passed, 0 failed.
 
 - Deployment output contains only the explicitly allowed static files.
 - HTML pages, local links, anchor targets, scripts, styles, and images resolve.
@@ -19,6 +19,7 @@ Result: 12 tests passed, 0 failed.
 - Root Netlify configuration builds and publishes only generated static output without backend functions or catch-all rewrites. The build includes `_headers` for Netlify and the local preview.
 - Search metadata, business microdata, indexing directives, production origin precedence, and opt-in Search Console verification are covered.
 - Legacy Vercel configuration explicitly redirects `/` and all other paths permanently to the Netlify production origin.
+- The sitemap contains only the homepage. All five policy pages stay accessible from the footer and use `noindex, follow`, without robots.txt blocking crawler access.
 
 ## Browser Checks (2026-10-07)
 
@@ -32,6 +33,13 @@ Result: 12 tests passed, 0 failed.
 - No application warning or error appeared in the inspected browser log.
 
 ## Public Deployment Checks
+
+Verified on 2026-11-21 after commit `c5ee754`:
+
+- The Netlify sitemap returns HTTP 200 and contains exactly one URL: the production homepage.
+- The homepage remains HTTP 200 with `index, follow, max-image-preview:large` and its Netlify canonical.
+- All five policy pages return HTTP 200 with `noindex, follow`. Both `/disclaimer` and `/disclaimer.html` were checked and serve the same noindex directive.
+- Existing Google results were not removed during this change. Google must recrawl to process redirects and noindex; no immediate ranking or homepage indexing is claimed.
 
 Verified on 2026-11-21 after commit `a396044`:
 
