@@ -3,6 +3,7 @@ const path = require("node:path");
 const root = path.resolve(__dirname, "..");
 const output = path.join(root, "public");
 const pages = ["index.html", "404.html", "privacy.html", "terms.html", "disclaimer.html", "cookies.html", "consultation-terms.html"];
+const indexablePages = ["index.html"];
 const files = [...pages, "styles.css", "app.js", "contact.js", "favicon.svg", "_headers"];
 const assets = ["legal-tech-mark.png", "legal-tech-hero-command-center.png", "legal-tech-operations-illustration.png"];
 
@@ -26,7 +27,7 @@ async function build() {
     if (file.endsWith(".html")) {
       let html = content.toString("utf8");
       html = site ? html.replaceAll("{{SITE_ORIGIN}}", site.origin) : html.replace(/^.*<meta[^>]*\{\{SITE_ORIGIN\}\}[^>]*>.*\n/gm, "");
-      const robots = file === "404.html" ? "noindex, follow" : "index, follow, max-image-preview:large";
+      const robots = indexablePages.includes(file) ? "index, follow, max-image-preview:large" : "noindex, follow";
       html = html.replace("</head>", `    <meta name="robots" content="${robots}">\n${file === "index.html" && verification ? `    <meta name="google-site-verification" content="${verification}">\n` : ""}  </head>`);
       content = Buffer.from(html);
     }
@@ -39,7 +40,7 @@ async function build() {
   }
   for (const asset of assets) await fs.copyFile(path.join(root, "assets", asset), path.join(output, "assets", asset));
   if (site) {
-    const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${pages.filter(p => p !== "404.html").map(p => `  <url><loc>${site.origin}/${p === "index.html" ? "" : p}</loc></url>`).join("\n")}\n</urlset>\n`;
+    const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${indexablePages.map(p => `  <url><loc>${site.origin}/${p === "index.html" ? "" : p}</loc></url>`).join("\n")}\n</urlset>\n`;
     await fs.writeFile(path.join(output, "sitemap.xml"), sitemap);
   }
   await fs.writeFile(path.join(output, "robots.txt"), `User-agent: *\nAllow: /\n${site ? `\nSitemap: ${site.origin}/sitemap.xml\n` : ""}`);

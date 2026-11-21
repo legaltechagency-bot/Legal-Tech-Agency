@@ -98,9 +98,26 @@ test("SEO canonical, sitemap and robots agree and exclude removed pages", async 
   const html = await fs.readFile(path.join(publicDir, "index.html"), "utf8");
   assert.ok(html.includes(`<link rel="canonical" href="${site}/">`));
   const sitemap = await fs.readFile(path.join(publicDir, "sitemap.xml"), "utf8");
-  assert.ok(sitemap.includes(`<loc>${site}/</loc>`));
+  assert.deepEqual([...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1]), [`${site}/`]);
   assert.doesNotMatch(sitemap, /admin|article|insight|legaltechagency\.id/);
   assert.ok((await fs.readFile(path.join(publicDir, "robots.txt"), "utf8")).includes(`${site}/sitemap.xml`));
+});
+
+test("Policy pages stay accessible but only the homepage is indexable", async () => {
+  const homepage = await (await fetch(base)).text();
+  assert.doesNotMatch(homepage, /noindex/);
+  for (const file of ["privacy.html", "terms.html", "disclaimer.html", "cookies.html", "consultation-terms.html"]) {
+    assert.ok(homepage.includes(`href="${file}"`), `Policy footer link remains: ${file}`);
+    const response = await fetch(`${base}/${file}`);
+    assert.equal(response.status, 200, file);
+    const html = await response.text();
+    assert.match(html, /name="robots" content="noindex, follow"/, file);
+    assert.equal((html.match(/name="robots"/g) || []).length, 1, file);
+    assert.match(html, /href="(?:index\.html|\/)"/, `Link back to homepage: ${file}`);
+  }
+  const robots = await (await fetch(`${base}/robots.txt`)).text();
+  assert.match(robots, /^Allow: \/$/m);
+  assert.doesNotMatch(robots, /^Disallow:/m, "Crawlers must be able to read policy noindex tags");
 });
 
 test("Old admin, API, database and source files are not publicly served", async () => {
@@ -161,7 +178,7 @@ test("Domain overrides, pinned production origin, and invalid origins are handle
   assert.equal(await runBuild(""), 0);
   const origin = "https://legaltechagency.netlify.app";
   const sitemap = await fs.readFile(path.join(publicDir, "sitemap.xml"), "utf8");
-  assert.equal((sitemap.match(/<loc>/g) || []).length, 6);
+  assert.equal((sitemap.match(/<loc>/g) || []).length, 1);
   for (const [, url] of sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)) {
     assert.equal(new URL(url).origin, origin);
     const html = await fs.readFile(path.join(publicDir, new URL(url).pathname.slice(1) || "index.html"), "utf8");
@@ -200,7 +217,7 @@ test("Search metadata and business microdata match visible business details", as
   for (const file of (await fs.readdir(publicDir)).filter(file => file.endsWith(".html"))) {
     const page = await fs.readFile(path.join(publicDir, file), "utf8");
     titles.push(page.match(/<title>([^<]+)<\/title>/)[1]);
-    assert.match(page, file === "404.html" ? /name="robots" content="noindex, follow"/ : /name="robots" content="index, follow/);
+    assert.match(page, file === "index.html" ? /name="robots" content="index, follow/ : /name="robots" content="noindex, follow"/);
   }
   assert.equal(titles.length, new Set(titles).size);
 });

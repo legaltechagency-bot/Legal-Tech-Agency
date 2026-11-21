@@ -29,6 +29,8 @@ Build menentukan origin dari `SITE_URL` atau `site.config.json`. URL preview sem
 
 URL produksi ditetapkan ke `https://legaltechagency.netlify.app/`. Build menghasilkan canonical URL, Open Graph, sitemap, dan robots.txt untuk domain ini. Data terstruktur bisnis menggunakan microdata sehingga tetap bekerja dengan Content Security Policy tanpa mengizinkan inline JavaScript.
 
+Sitemap hanya berisi beranda. Halaman kebijakan (termasuk Disclaimer) memakai `noindex, follow` agar tidak menjadi halaman masuk dari pencarian; halaman tetap tersedia melalui footer untuk pengunjung.
+
 Properti Netlify sudah diverifikasi di Google Search Console melalui tag HTML pada 2026-11-08 dan sitemap berhasil dikirim. Pertahankan tag verifikasi yang baru. Panduan pemeliharaan tersedia di `SEO-GUIDE.md`.
 
 ## Mengubah Konten

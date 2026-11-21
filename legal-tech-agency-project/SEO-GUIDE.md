@@ -10,6 +10,7 @@ URL utama: https://legaltechagency.netlify.app/
 - Microdata WebSite, LocalBusiness, dan PostalAddress sesuai nama, kontak, alamat, dan jam yang tampil di website.
 - Tidak ada klaim rating, ulasan palsu, atau klaim sebagai kantor hukum dalam data terstruktur.
 - Halaman 404 mengirim HTTP 404 dan ditandai noindex. Halaman utama mengizinkan indexing.
+- Sejak 2026-11-21, hanya homepage dimasukkan ke sitemap. Disclaimer dan empat halaman kebijakan lainnya memakai `noindex, follow`, tetap HTTP 200, dan tetap dapat dibuka dari footer. Halaman tersebut tidak diblokir di robots.txt agar Google dapat membaca noindex.
 - Tidak menambah tracker, cookie, login, database, atau Supabase.
 
 ## Verifikasi Search Console
@@ -41,5 +42,7 @@ Nilai null tidak menghasilkan tag verifikasi. Setelah verifikasi berhasil, perta
 Konfigurasi `../vercel.json` memakai redirect permanen HTTP 308 dari setiap jalur Vercel ke jalur Netlify yang sepadan. Publikasikan konfigurasi ini ke Vercel, lalu periksa status, header Location, query string, dan hasil akhir tanpa loop. Proyek/domain Vercel lama harus tetap aktif untuk menyajikan redirect. Jangan hapus properti lama dari Search Console jika masih diperlukan untuk memantau migrasi. Redirect tidak menjamin homepage Netlify langsung diindeks.
 
 SEO teknis dan sitemap membantu discovery, tetapi bukan jaminan pengindeksan seluruh halaman, rich result, atau peringkat pertama. Google menentukan kapan sebuah halaman di-crawl dan apakah layak ditampilkan.
+
+Hasil Disclaimer lama di Google tidak langsung hilang setelah deployment. Google perlu mengikuti redirect Vercel dan membaca noindex pada halaman Netlify. Jangan mengarahkan semua halaman kebijakan ke homepage atau mengganti canonical kebijakan menjadi homepage; halaman tersebut memiliki isi berbeda. Aturan ini tidak menjamin homepage langsung muncul sebagai hasil pertama.
 
 Panduan resmi: [pindah domain](https://developers.google.com/search/docs/crawling-indexing/site-move-with-url-changes), [meminta crawl ulang](https://developers.google.com/search/docs/crawling-indexing/ask-google-to-recrawl), [verifikasi Search Console](https://support.google.com/webmasters/answer/9008080), dan [data terstruktur LocalBusiness](https://developers.google.com/search/docs/appearance/structured-data/local-business).
