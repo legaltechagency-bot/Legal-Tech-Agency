@@ -1,13 +1,13 @@
 # Static Website Test Report
 
-Latest automated test date: 2026-11-08
+Latest automated test date: 2026-11-21
 Target: generated `public` directory, served by the local preview in integration tests.
 Configured production origin: https://legaltechagency.netlify.app/
 
 ## Automated Checks
 
 Command: `node --test tests/web.test.js`
-Result: 11 tests passed, 0 failed.
+Result: 12 tests passed, 0 failed.
 
 - Deployment output contains only the explicitly allowed static files.
 - HTML pages, local links, anchor targets, scripts, styles, and images resolve.
@@ -18,6 +18,7 @@ Result: 11 tests passed, 0 failed.
 - Security headers and MIME types are present in the local static preview.
 - Root Netlify configuration builds and publishes only generated static output without backend functions or catch-all rewrites. The build includes `_headers` for Netlify and the local preview.
 - Search metadata, business microdata, indexing directives, production origin precedence, and opt-in Search Console verification are covered.
+- Legacy Vercel configuration explicitly redirects `/` and all other paths permanently to the Netlify production origin.
 
 ## Browser Checks (2026-10-07)
 
@@ -31,6 +32,13 @@ Result: 11 tests passed, 0 failed.
 - No application warning or error appeared in the inspected browser log.
 
 ## Public Deployment Checks
+
+Verified on 2026-11-21 after commit `a396044`:
+
+- The legacy Vercel homepage, all five published legal pages, robots.txt, sitemap.xml, and a logo asset return HTTP 308 with Location pointing to the matching Netlify URL, then HTTP 200 from Netlify.
+- Homepage and privacy-page query strings are preserved. Unknown URLs redirect to the same Netlify path and correctly return HTTP 404 rather than a soft 404 homepage.
+- All 12 redirect cases passed without a redirect loop. Direct Netlify requests still return HTTP 200, the production canonical remains Netlify, and the approved Google verification tag remains present.
+- Keep the legacy Vercel project and domain enabled for redirects to work. A permanent redirect does not prove Google has indexed the Netlify homepage or bypass Search Console request quotas.
 
 Verified on 2026-11-08 after commit `9e78d3e` was pushed:
 
