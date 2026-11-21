@@ -135,6 +135,10 @@ test("Netlify configuration publishes only generated static output", async () =>
 test("Legacy Vercel deployment permanently redirects every path to Netlify", async () => {
   const config = JSON.parse(await fs.readFile(path.resolve(root, "..", "vercel.json"), "utf8"));
   assert.deepEqual(config.redirects, [{
+    source: "/",
+    destination: "https://legaltechagency.netlify.app/",
+    permanent: true
+  }, {
     source: "/:path*",
     destination: "https://legaltechagency.netlify.app/:path*",
     permanent: true
@@ -142,7 +146,7 @@ test("Legacy Vercel deployment permanently redirects every path to Netlify", asy
   assert.equal(config.buildCommand, "node legal-tech-agency-project/scripts/build.js");
   assert.equal(config.outputDirectory, "legal-tech-agency-project/public");
   assert.ok(!config.rewrites && !config.routes, "No competing routing rules");
-  assert.equal(new URL(config.redirects[0].destination).origin, siteConfig.url);
+  for (const redirect of config.redirects) assert.equal(new URL(redirect.destination).origin, siteConfig.url);
 });
 
 test("Domain overrides, pinned production origin, and invalid origins are handled safely", async () => {

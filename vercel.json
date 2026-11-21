@@ -7,6 +7,11 @@
   "cleanUrls": false,
   "redirects": [
     {
+      "source": "/",
+      "destination": "https://legaltechagency.netlify.app/",
+      "permanent": true
+    },
+    {
       "source": "/:path*",
       "destination": "https://legaltechagency.netlify.app/:path*",
       "permanent": true
