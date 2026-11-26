@@ -24,7 +24,8 @@ Registrar: Domainesia, dengan DNS eksternal tetap pada `nsx1.domainesia.com` dan
 - Record CNAME `www`: `legaltechagency.netlify.app`.
 - Primary domain Netlify: `legaltechagency.my.id`. Sertifikat TLS dikelola otomatis oleh Netlify; pastikan sertifikat valid sebelum mempublikasikan pengalihan alamat lama.
 - `_redirects` pada output build mengarahkan subdomain Netlify lama dan `www` ke domain resmi dengan HTTP 301, tanpa mengubah jalur halaman.
-- Verifikasi email aktivasi registrar harus diselesaikan pemilik agar domain tidak ditangguhkan. Jangan hapus atau ubah record email untuk migrasi website.
+- Pemilik melaporkan email aktivasi registrar sudah diverifikasi pada 2026-11-26. Jangan hapus atau ubah record email untuk migrasi website.
+- Properti Domain Google Search Console sudah diverifikasi melalui TXT DNS untuk `legaltechagency@gmail.com` pada 2026-11-26. Pertahankan TXT verifikasi. Sitemap telah dikirim, tetapi pemrosesan laporan belum berhasil; detail ada di panduan SEO.
 
 ## Pengujian Lokal
 

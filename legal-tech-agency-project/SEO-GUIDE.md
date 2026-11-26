@@ -21,7 +21,11 @@ Properti lama `https://legaltechagency.vercel.app/` sudah diverifikasi pada 2026
 
 Pada 2026-11-08, Google mengonfirmasi kepemilikan properti URL Prefix `https://legaltechagency.netlify.app/` untuk `legaltechagency@gmail.com` melalui tag HTML. Homepage lama kemudian dikonfirmasi diindeks pada pemeriksaan 2026-11-24 dan 2026-11-26. Status tersebut bukan verifikasi atau indeks otomatis untuk `legaltechagency.my.id`. Token lama dipertahankan, tetapi token properti baru harus mengikuti nilai yang diberikan Google.
 
-Langkah untuk menyiapkan ulang atau memelihara properti:
+Pada 2026-11-26, Google mengonfirmasi kepemilikan properti Domain `sc-domain:legaltechagency.my.id` untuk `legaltechagency@gmail.com` melalui TXT DNS di Domainesia. Properti ini mencakup seluruh protokol dan subdomain. Pertahankan TXT `google-site-verification=O8fjCo865Rwn6ChWmVJPa1aI-U3WOEiAyq-CdNnfVMY`; record A dan CNAME tetap dipertahankan. Tidak perlu mengganti token HTML lama untuk verifikasi DNS ini.
+
+Sitemap `https://legaltechagency.my.id/sitemap.xml` sudah dikirim dan dikirim ulang setelah uji langsung. Google menerima pengiriman, tetapi laporan masih menampilkan `Tidak dapat mengambil peta situs` dengan 0 halaman ditemukan. Uji URL aktif Google terhadap sitemap melaporkan crawl diizinkan dan pengambilan halaman berhasil. Pemeriksaan publik juga mengonfirmasi HTTP 200, Content-Type application/xml, XML valid, dan robots.txt yang mengizinkan crawl. Penyebab kegagalan pemrosesan laporan belum dipastikan; keberhasilan akses tidak sama dengan keberhasilan pemrosesan sitemap atau indeks homepage. Periksa lagi laporan ini sebelum menyatakan sitemap berhasil. Tidak ada permintaan pengindeksan baru yang dilakukan pada sesi ini.
+
+Langkah alternatif untuk menyiapkan properti URL Prefix (tidak diperlukan untuk properti Domain yang sudah diverifikasi):
 
 1. Masuk ke https://search.google.com/search-console menggunakan akun Google pemilik website.
 2. Setelah HTTPS aktif, tambahkan properti URL Prefix `https://legaltechagency.my.id/` (atau properti Domain melalui TXT DNS).

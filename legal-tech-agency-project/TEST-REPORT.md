@@ -34,6 +34,15 @@ Result: 14 tests passed, 0 failed.
 
 ## Public Deployment Checks
 
+Search Console checks on 2026-11-26:
+
+- With the owner's explicit approval, added an apex TXT Google verification record in Domainesia, preserving A, CNAME, and nameservers. Public TXT lookup returned the expected value.
+- Google confirmed successful DNS ownership verification of Domain property `sc-domain:legaltechagency.my.id` for `legaltechagency@gmail.com`.
+- Submitted the full official sitemap URL. After an initial fetch error, Google's live URL test of that sitemap reported crawling allowed and page fetch successful. No indexing request was made for the XML file or homepage.
+- Public requests returned HTTP 200 and application/xml for the valid XML sitemap containing only the official homepage. robots.txt allows crawling and references this exact sitemap.
+- Resubmission was accepted, but the Sitemaps report still showed a fetch failure and 0 discovered pages at the end of the check. Processing success and new-domain homepage indexing are not claimed. The cause of the report failure remains unresolved despite successful live access.
+- The owner reported completing registrar email verification; this completion was not independently rechecked in the registrar UI.
+
 Verified on 2026-11-26 after commit `87d6989`:
 
 - Domainesia DNS retained its existing nameservers (`nsx1.domainesia.com`, `nsx2.domainesia.com`). Added apex A `75.2.60.5` and www CNAME `legaltechagency.netlify.app`, matching Netlify's guidance. No existing mail records were removed.
@@ -41,7 +50,7 @@ Verified on 2026-11-26 after commit `87d6989`:
 - All six public HTML pages, CSS, both JavaScript files, three images, robots.txt, and sitemap.xml returned HTTP 200 directly on the official domain. No old host metadata was found in HTML or SEO files.
 - Old Netlify homepage and a policy URL with a query string return HTTP 301 to the same custom-domain path. www and HTTP also return HTTP 301 to the HTTPS apex. All tested destinations return HTTP 200 without loops.
 - The homepage canonical and sole sitemap URL are `https://legaltechagency.my.id/`. The previous Google verification tag is preserved; this is not a claim of Search Console verification or indexing for the new domain.
-- The registrar displayed an outstanding email activation reminder. The owner must finish that email verification to avoid domain suspension.
+- At that earlier deployment check, the registrar displayed an outstanding email activation reminder. The owner subsequently reported completing verification, as recorded above.
 
 Verified on 2026-11-21 after commit `c5ee754`:
 

@@ -31,7 +31,7 @@ URL produksi ditetapkan ke `https://legaltechagency.my.id/`. Hosting tetap pada 
 
 Sitemap hanya berisi beranda. Halaman kebijakan (termasuk Disclaimer) memakai `noindex, follow` agar tidak menjadi halaman masuk dari pencarian; halaman tetap tersedia melalui footer untuk pengunjung.
 
-Properti subdomain Netlify lama sudah diverifikasi di Google Search Console melalui tag HTML pada 2026-11-08. Domain resmi memerlukan properti Search Console sendiri setelah HTTPS siap. Jangan menganggap status indeks domain lama otomatis berlaku untuk domain baru. Panduan tersedia di `SEO-GUIDE.md`.
+Properti Domain `legaltechagency.my.id` sudah diverifikasi melalui TXT DNS di Google Search Console untuk `legaltechagency@gmail.com` pada 2026-11-26. Pertahankan record TXT verifikasi. Sitemap telah dikirim; uji langsung Google berhasil mengambilnya, tetapi laporan sitemap masih menampilkan kegagalan pengambilan. Verifikasi kepemilikan bukan bukti homepage sudah diindeks. Panduan dan status terperinci tersedia di `SEO-GUIDE.md`.
 
 `_redirects` ikut dalam output build agar alamat Netlify lama dan `www.legaltechagency.my.id` dialihkan ke domain resmi. Petunjuk record DNS Domainesia ada di README root repositori.
 
