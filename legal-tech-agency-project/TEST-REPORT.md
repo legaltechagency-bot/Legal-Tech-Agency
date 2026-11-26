@@ -1,24 +1,24 @@
 # Static Website Test Report
 
-Latest automated test date: 2026-11-21
+Latest automated test date: 2026-11-26
 Target: generated `public` directory, served by the local preview in integration tests.
-Configured production origin: https://legaltechagency.netlify.app/
+Configured production origin: https://legaltechagency.my.id/ (hosted on Netlify).
 
 ## Automated Checks
 
 Command: `node --test tests/web.test.js`
-Result: 13 tests passed, 0 failed.
+Result: 14 tests passed, 0 failed.
 
 - Deployment output contains only the explicitly allowed static files.
 - HTML pages, local links, anchor targets, scripts, styles, and images resolve.
 - Eight product cards, ten native FAQ entries, and consultation links exist in HTML without requiring JavaScript to generate them.
 - Default, service-specific, and audit-specific WhatsApp links use the official PIC number 6285181760072.
-- Canonical URLs, Open Graph URLs, sitemap, and robots configuration use the Netlify production domain. Explicit domain overrides, preview URL isolation, and invalid origins are covered.
+- Canonical URLs, Open Graph URLs, sitemap, and robots configuration use the official custom domain. Explicit domain overrides, preview URL isolation, and invalid origins are covered.
 - Admin, article, API, database, and private source paths are not served; POST is rejected.
 - Security headers and MIME types are present in the local static preview.
 - Root Netlify configuration builds and publishes only generated static output without backend functions or catch-all rewrites. The build includes `_headers` for Netlify and the local preview.
 - Search metadata, business microdata, indexing directives, production origin precedence, and opt-in Search Console verification are covered.
-- Legacy Vercel configuration explicitly redirects `/` and all other paths permanently to the Netlify production origin.
+- Legacy Vercel configuration explicitly redirects `/` and all other paths permanently to the official domain. Netlify `_redirects` redirects only the old Netlify hostname and www, without a wildcard host loop.
 - The sitemap contains only the homepage. All five policy pages stay accessible from the footer and use `noindex, follow`, without robots.txt blocking crawler access.
 
 ## Browser Checks (2026-10-07)
@@ -33,6 +33,15 @@ Result: 13 tests passed, 0 failed.
 - No application warning or error appeared in the inspected browser log.
 
 ## Public Deployment Checks
+
+Verified on 2026-11-26 after commit `87d6989`:
+
+- Domainesia DNS retained its existing nameservers (`nsx1.domainesia.com`, `nsx2.domainesia.com`). Added apex A `75.2.60.5` and www CNAME `legaltechagency.netlify.app`, matching Netlify's guidance. No existing mail records were removed.
+- Netlify primary domain is `legaltechagency.my.id`; its Let's Encrypt certificate covers both apex and www. HTTPS requests passed normal certificate validation without bypasses.
+- All six public HTML pages, CSS, both JavaScript files, three images, robots.txt, and sitemap.xml returned HTTP 200 directly on the official domain. No old host metadata was found in HTML or SEO files.
+- Old Netlify homepage and a policy URL with a query string return HTTP 301 to the same custom-domain path. www and HTTP also return HTTP 301 to the HTTPS apex. All tested destinations return HTTP 200 without loops.
+- The homepage canonical and sole sitemap URL are `https://legaltechagency.my.id/`. The previous Google verification tag is preserved; this is not a claim of Search Console verification or indexing for the new domain.
+- The registrar displayed an outstanding email activation reminder. The owner must finish that email verification to avoid domain suspension.
 
 Verified on 2026-11-21 after commit `c5ee754`:
 
