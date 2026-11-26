@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://legaltechagency.netlify.app/sitemap.xml
+Sitemap: https://legaltechagency.my.id/sitemap.xml

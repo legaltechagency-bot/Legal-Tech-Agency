@@ -8,12 +8,12 @@
   "redirects": [
     {
       "source": "/",
-      "destination": "https://legaltechagency.netlify.app/",
+      "destination": "https://legaltechagency.my.id/",
       "permanent": true
     },
     {
       "source": "/:path*",
-      "destination": "https://legaltechagency.netlify.app/:path*",
+      "destination": "https://legaltechagency.my.id/:path*",
       "permanent": true
     }
   ],

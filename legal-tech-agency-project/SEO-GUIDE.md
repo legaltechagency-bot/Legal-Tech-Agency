@@ -1,6 +1,8 @@
 # SEO dan Google Search Console
 
-URL utama: https://legaltechagency.netlify.app/
+URL utama: https://legaltechagency.my.id/
+
+Hosting tetap Netlify. Domainesia mengelola registrasi dan DNS; tidak diperlukan hosting atau database Domainesia untuk website statis ini.
 
 ## Yang Sudah Diterapkan
 
@@ -17,12 +19,12 @@ URL utama: https://legaltechagency.netlify.app/
 
 Properti lama `https://legaltechagency.vercel.app/` sudah diverifikasi pada 2026-10-07, dan Google saat itu melaporkan homepage diindeks serta 6 halaman ditemukan dari sitemap. Status tersebut tidak berlaku untuk domain Netlify.
 
-Pada 2026-11-08, Google mengonfirmasi kepemilikan properti URL Prefix `https://legaltechagency.netlify.app/` untuk `legaltechagency@gmail.com` melalui tag HTML. `sitemap.xml` berhasil dikirim. Status pemrosesan sitemap dan pengindeksan URL baru belum diperiksa. Pertahankan tag yang sudah terpasang pada homepage.
+Pada 2026-11-08, Google mengonfirmasi kepemilikan properti URL Prefix `https://legaltechagency.netlify.app/` untuk `legaltechagency@gmail.com` melalui tag HTML. Homepage lama kemudian dikonfirmasi diindeks pada pemeriksaan 2026-11-24 dan 2026-11-26. Status tersebut bukan verifikasi atau indeks otomatis untuk `legaltechagency.my.id`. Token lama dipertahankan, tetapi token properti baru harus mengikuti nilai yang diberikan Google.
 
 Langkah untuk menyiapkan ulang atau memelihara properti:
 
 1. Masuk ke https://search.google.com/search-console menggunakan akun Google pemilik website.
-2. Tambahkan properti URL Prefix `https://legaltechagency.netlify.app/`.
+2. Setelah HTTPS aktif, tambahkan properti URL Prefix `https://legaltechagency.my.id/` (atau properti Domain melalui TXT DNS).
 3. Pilih HTML tag. Google memberikan meta `google-site-verification`.
 4. Masukkan hanya nilai `content` yang ditampilkan untuk properti baru ke `googleSiteVerification` di `site.config.json`, atau set environment variable Netlify `GOOGLE_SITE_VERIFICATION` dengan scope Builds. Jangan masukkan keseluruhan tag HTML.
 5. Build/deploy ulang, periksa tag pada sumber halaman utama, lalu klik Verify di Search Console.
@@ -34,15 +36,15 @@ Nilai null tidak menghasilkan tag verifikasi. Setelah verifikasi berhasil, perta
 ## Pemeriksaan Setelah Deployment
 
 - Halaman utama: HTTP 200, tidak meminta login, tidak memiliki noindex atau header X-Robots-Tag yang melarang indexing.
-- Canonical tepat `https://legaltechagency.netlify.app/`, bukan URL preview atau Vercel.
+- Canonical tepat `https://legaltechagency.my.id/`, bukan subdomain Netlify, URL preview, atau Vercel.
 - `robots.txt` dan `sitemap.xml` dapat diakses dengan HTTP 200.
 - URL yang tidak ada dan jalur admin lama mengembalikan HTTP 404, bukan halaman utama dengan HTTP 200.
 - Validasi data terstruktur dengan https://search.google.com/test/rich-results dan gunakan URL Inspection untuk melihat akses Google.
 
-Konfigurasi `../vercel.json` memakai redirect permanen HTTP 308 dari setiap jalur Vercel ke jalur Netlify yang sepadan. Publikasikan konfigurasi ini ke Vercel, lalu periksa status, header Location, query string, dan hasil akhir tanpa loop. Proyek/domain Vercel lama harus tetap aktif untuk menyajikan redirect. Jangan hapus properti lama dari Search Console jika masih diperlukan untuk memantau migrasi. Redirect tidak menjamin homepage Netlify langsung diindeks.
+`_redirects` memakai HTTP 301 dari subdomain Netlify lama dan `www` ke jalur domain resmi yang sepadan. Konfigurasi `../vercel.json` memakai HTTP 308 ke domain resmi untuk deployment Vercel yang masih aktif. Publikasikan pengalihan hanya setelah HTTPS domain resmi valid. Periksa status, Location, query string, dan hasil akhir tanpa loop. Jangan hapus properti lama dari Search Console jika masih diperlukan untuk memantau migrasi. Redirect tidak menjamin homepage domain baru langsung diindeks.
 
 SEO teknis dan sitemap membantu discovery, tetapi bukan jaminan pengindeksan seluruh halaman, rich result, atau peringkat pertama. Google menentukan kapan sebuah halaman di-crawl dan apakah layak ditampilkan.
 
-Hasil Disclaimer lama di Google tidak langsung hilang setelah deployment. Google perlu mengikuti redirect Vercel dan membaca noindex pada halaman Netlify. Jangan mengarahkan semua halaman kebijakan ke homepage atau mengganti canonical kebijakan menjadi homepage; halaman tersebut memiliki isi berbeda. Aturan ini tidak menjamin homepage langsung muncul sebagai hasil pertama.
+Hasil Disclaimer lama di Google tidak langsung hilang setelah deployment. Google perlu mengikuti redirect yang masih tersedia dan membaca noindex pada halaman domain resmi. Jangan mengarahkan semua halaman kebijakan ke homepage atau mengganti canonical kebijakan menjadi homepage; halaman tersebut memiliki isi berbeda. Aturan ini tidak menjamin homepage langsung muncul sebagai hasil pertama.
 
 Panduan resmi: [pindah domain](https://developers.google.com/search/docs/crawling-indexing/site-move-with-url-changes), [meminta crawl ulang](https://developers.google.com/search/docs/crawling-indexing/ask-google-to-recrawl), [verifikasi Search Console](https://support.google.com/webmasters/answer/9008080), dan [data terstruktur LocalBusiness](https://developers.google.com/search/docs/appearance/structured-data/local-business).

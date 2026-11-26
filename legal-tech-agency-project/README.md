@@ -27,11 +27,13 @@ Build menyalin `_headers` ke `public` sehingga header keamanan dan cache ikut da
 
 Build menentukan origin dari `SITE_URL` atau `site.config.json`. URL preview sementara tidak dipakai sebagai canonical. Untuk domain khusus, gunakan URL HTTPS lengkap di `SITE_URL` lalu redeploy.
 
-URL produksi ditetapkan ke `https://legaltechagency.netlify.app/`. Build menghasilkan canonical URL, Open Graph, sitemap, dan robots.txt untuk domain ini. Data terstruktur bisnis menggunakan microdata sehingga tetap bekerja dengan Content Security Policy tanpa mengizinkan inline JavaScript.
+URL produksi ditetapkan ke `https://legaltechagency.my.id/`. Hosting tetap pada proyek Netlify `legaltechagency`. Build menghasilkan canonical URL, Open Graph, sitemap, dan robots.txt untuk domain resmi ini. Data terstruktur bisnis menggunakan microdata sehingga tetap bekerja dengan Content Security Policy tanpa mengizinkan inline JavaScript.
 
 Sitemap hanya berisi beranda. Halaman kebijakan (termasuk Disclaimer) memakai `noindex, follow` agar tidak menjadi halaman masuk dari pencarian; halaman tetap tersedia melalui footer untuk pengunjung.
 
-Properti Netlify sudah diverifikasi di Google Search Console melalui tag HTML pada 2026-11-08 dan sitemap berhasil dikirim. Pertahankan tag verifikasi yang baru. Panduan pemeliharaan tersedia di `SEO-GUIDE.md`.
+Properti subdomain Netlify lama sudah diverifikasi di Google Search Console melalui tag HTML pada 2026-11-08. Domain resmi memerlukan properti Search Console sendiri setelah HTTPS siap. Jangan menganggap status indeks domain lama otomatis berlaku untuk domain baru. Panduan tersedia di `SEO-GUIDE.md`.
+
+`_redirects` ikut dalam output build agar alamat Netlify lama dan `www.legaltechagency.my.id` dialihkan ke domain resmi. Petunjuk record DNS Domainesia ada di README root repositori.
 
 ## Mengubah Konten
 

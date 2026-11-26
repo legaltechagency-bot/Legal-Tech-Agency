@@ -41,7 +41,7 @@ after(async () => {
 
 test("Publish directory contains only the static website", async () => {
   const files = await fs.readdir(publicDir);
-  assert.deepEqual(files.sort(), ["404.html", "_headers", "app.js", "assets", "consultation-terms.html", "contact.js", "cookies.html", "disclaimer.html", "favicon.svg", "index.html", "privacy.html", "robots.txt", "sitemap.xml", "styles.css", "terms.html"].sort());
+  assert.deepEqual(files.sort(), ["404.html", "_headers", "_redirects", "app.js", "assets", "consultation-terms.html", "contact.js", "cookies.html", "disclaimer.html", "favicon.svg", "index.html", "privacy.html", "robots.txt", "sitemap.xml", "styles.css", "terms.html"].sort());
   for (const file of files.filter(file => /\.(html|js)$/.test(file))) {
     const content = await fs.readFile(path.join(publicDir, file), "utf8");
     assert.doesNotMatch(content, /(?:localStorage|sessionStorage)\s*\.|\/api\/|supabase|LegalTech2026|data-admin|data-articles|id="insight"|article\.html|newsletter|<form\b/i, file);
@@ -121,7 +121,7 @@ test("Policy pages stay accessible but only the homepage is indexable", async ()
 });
 
 test("Old admin, API, database and source files are not publicly served", async () => {
-  for (const url of ["/admin.html", "/admin.js", "/article.html", "/api/data", "/api/records", "/data/db.json", "/server.js", "/package.json", "/netlify.toml", "/_headers", "/scripts/build.js", "/missing", "/deep/missing", "/%2e%2e%5cREADME.md"]) {
+  for (const url of ["/admin.html", "/admin.js", "/article.html", "/api/data", "/api/records", "/data/db.json", "/server.js", "/package.json", "/netlify.toml", "/_headers", "/_redirects", "/scripts/build.js", "/missing", "/deep/missing", "/%2e%2e%5cREADME.md"]) {
     const response = await fetch(base + url);
     assert.equal(response.status, 404, url);
     assert.match(await response.text(), /Halaman Tidak Ditemukan/);
@@ -149,21 +149,30 @@ test("Netlify configuration publishes only generated static output", async () =>
   assert.equal(headers, await fs.readFile(path.join(root, "_headers"), "utf8"));
 });
 
-test("Legacy Vercel deployment permanently redirects every path to Netlify", async () => {
+test("Legacy Vercel deployment permanently redirects every path to the official domain", async () => {
   const config = JSON.parse(await fs.readFile(path.resolve(root, "..", "vercel.json"), "utf8"));
   assert.deepEqual(config.redirects, [{
     source: "/",
-    destination: "https://legaltechagency.netlify.app/",
+    destination: "https://legaltechagency.my.id/",
     permanent: true
   }, {
     source: "/:path*",
-    destination: "https://legaltechagency.netlify.app/:path*",
+    destination: "https://legaltechagency.my.id/:path*",
     permanent: true
   }]);
   assert.equal(config.buildCommand, "node legal-tech-agency-project/scripts/build.js");
   assert.equal(config.outputDirectory, "legal-tech-agency-project/public");
   assert.ok(!config.rewrites && !config.routes, "No competing routing rules");
   for (const redirect of config.redirects) assert.equal(new URL(redirect.destination).origin, siteConfig.url);
+});
+
+test("Netlify subdomain and www redirect to the official domain without a wildcard loop", async () => {
+  const redirects = await fs.readFile(path.join(publicDir, "_redirects"), "utf8");
+  assert.equal(redirects, await fs.readFile(path.join(root, "_redirects"), "utf8"));
+  assert.deepEqual(redirects.trim().split(/\r?\n/), [
+    "https://legaltechagency.netlify.app/* https://legaltechagency.my.id/:splat 301!",
+    "https://www.legaltechagency.my.id/* https://legaltechagency.my.id/:splat 301!"
+  ]);
 });
 
 test("Domain overrides, pinned production origin, and invalid origins are handled safely", async () => {
@@ -176,7 +185,7 @@ test("Domain overrides, pinned production origin, and invalid origins are handle
   assert.equal(await runBuild("https://custom-domain.example"), 0);
   assert.match(await fs.readFile(path.join(publicDir, "index.html"), "utf8"), /canonical" href="https:\/\/custom-domain\.example\//);
   assert.equal(await runBuild(""), 0);
-  const origin = "https://legaltechagency.netlify.app";
+  const origin = "https://legaltechagency.my.id";
   const sitemap = await fs.readFile(path.join(publicDir, "sitemap.xml"), "utf8");
   assert.equal((sitemap.match(/<loc>/g) || []).length, 1);
   for (const [, url] of sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)) {
@@ -184,9 +193,9 @@ test("Domain overrides, pinned production origin, and invalid origins are handle
     const html = await fs.readFile(path.join(publicDir, new URL(url).pathname.slice(1) || "index.html"), "utf8");
     assert.ok(html.includes(`<link rel="canonical" href="${url}">`));
     assert.ok(html.includes(`<meta property="og:url" content="${url}">`));
-    assert.doesNotMatch(html, /deploy-preview|unrelated\.netlify\.app|\.vercel\.app|\{\{SITE_ORIGIN\}\}/);
+    assert.doesNotMatch(html, /deploy-preview|\.netlify\.app|\.vercel\.app|\{\{SITE_ORIGIN\}\}/);
   }
-  assert.match(await fs.readFile(path.join(publicDir, "robots.txt"), "utf8"), /^Sitemap: https:\/\/legaltechagency\.netlify\.app\/sitemap\.xml$/m);
+  assert.match(await fs.readFile(path.join(publicDir, "robots.txt"), "utf8"), /^Sitemap: https:\/\/legaltechagency\.my\.id\/sitemap\.xml$/m);
   for (const invalid of ["http://insecure.example", "https://user:secret@invalid.example", "https://invalid.example/subpath", "https://invalid.example/?q=test"]) {
     assert.notEqual(await runBuild(invalid), 0);
   }

@@ -14,7 +14,17 @@ Tidak diperlukan install dependency atau environment variable Supabase.
 
 Untuk deploy manual di proyek yang sama, unggah `legal-tech-agency-static-public.zip` melalui tab Deploys, bukan ZIP kode sumber. Paket ini sudah berisi `index.html`, `_headers`, `robots.txt`, dan `sitemap.xml` di tingkat teratas.
 
-SEO utama ditetapkan ke `https://legaltechagency.netlify.app/` di `legal-tech-agency-project/site.config.json`. Jika `SITE_URL` pernah diatur di Netlify, kosongkan atau set ke URL HTTPS produksi yang benar. URL preview tidak menggantikan canonical produksi. Panduan properti Google Search Console baru dan pengiriman sitemap tersedia di `legal-tech-agency-project/SEO-GUIDE.md`.
+Domain resmi ditetapkan ke `https://legaltechagency.my.id/` di `legal-tech-agency-project/site.config.json`. Hosting tetap proyek Netlify `legaltechagency`. Jika `SITE_URL` pernah diatur di Netlify, kosongkan atau set ke URL HTTPS produksi yang benar. URL preview tidak menggantikan canonical produksi. Panduan Google Search Console tersedia di `legal-tech-agency-project/SEO-GUIDE.md`.
+
+## Domain Resmi
+
+Registrar: Domainesia, dengan DNS eksternal tetap pada `nsx1.domainesia.com` dan `nsx2.domainesia.com`.
+
+- Record A `@`: `75.2.60.5`, sesuai petunjuk Netlify untuk apex domain.
+- Record CNAME `www`: `legaltechagency.netlify.app`.
+- Primary domain Netlify: `legaltechagency.my.id`. Sertifikat TLS dikelola otomatis oleh Netlify; pastikan sertifikat valid sebelum mempublikasikan pengalihan alamat lama.
+- `_redirects` pada output build mengarahkan subdomain Netlify lama dan `www` ke domain resmi dengan HTTP 301, tanpa mengubah jalur halaman.
+- Verifikasi email aktivasi registrar harus diselesaikan pemilik agar domain tidak ditangguhkan. Jangan hapus atau ubah record email untuk migrasi website.
 
 ## Pengujian Lokal
 
@@ -30,4 +40,4 @@ Konfigurasi mengikuti [dokumentasi Netlify](https://docs.netlify.com/build/confi
 
 ## Redirect Vercel Lama
 
-`vercel.json` mengarahkan semua jalur deployment Vercel ke `https://legaltechagency.netlify.app/` melalui redirect permanen HTTP 308. Jalur halaman dan query string dipertahankan. Konfigurasi ini hanya dipakai Vercel; Netlify tetap menyajikan website tanpa redirect balik. Pertahankan proyek/domain lama aktif agar redirect tetap berjalan.
+`vercel.json` mengarahkan semua jalur deployment Vercel ke `https://legaltechagency.my.id/` melalui redirect permanen HTTP 308. Jalur halaman dan query string dipertahankan. Konfigurasi ini hanya dipakai Vercel; Netlify melayani domain resmi tanpa redirect balik. Vercel harus aktif agar redirect dari alamat Vercel lama berjalan; website utama di Netlify tidak bergantung padanya.

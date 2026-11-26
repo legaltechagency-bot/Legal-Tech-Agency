@@ -4,7 +4,7 @@ const root = path.resolve(__dirname, "..");
 const output = path.join(root, "public");
 const pages = ["index.html", "404.html", "privacy.html", "terms.html", "disclaimer.html", "cookies.html", "consultation-terms.html"];
 const indexablePages = ["index.html"];
-const files = [...pages, "styles.css", "app.js", "contact.js", "favicon.svg", "_headers"];
+const files = [...pages, "styles.css", "app.js", "contact.js", "favicon.svg", "_headers", "_redirects"];
 const assets = ["legal-tech-mark.png", "legal-tech-hero-command-center.png", "legal-tech-operations-illustration.png"];
 
 async function build() {
